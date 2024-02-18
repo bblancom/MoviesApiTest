@@ -1,4 +1,5 @@
-﻿using GrowthApi.Dtos;
+﻿using AutoMapper;
+using GrowthApi.Dtos;
 using GrowthApi.Entities;
 using GrowthApi.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -20,15 +21,17 @@ namespace GrowthApi.Endpoints
         }
 
 
-        static async Task<Ok<List<GenreDto>>> GetGenres(IGenreRepository genreRepository)
+        static async Task<Ok<List<GenreDto>>> GetGenres(IGenreRepository genreRepository, IMapper mapper)
         {
             var genres = await genreRepository.GetAll();
-            var genresDto = genres.Select(x => new GenreDto { Id = x.Id, Name = x.Name }).ToList();
+            var genresDto = mapper.Map<List<GenreDto>>(genres);
 
             return TypedResults.Ok(genresDto);
         }
 
-        static async Task<Results<Ok<GenreDto>, NotFound>> GetGenreById(IGenreRepository repository, int id)
+        static async Task<Results<Ok<GenreDto>, NotFound>> GetGenreById(IGenreRepository repository,
+            int id,
+            IMapper mapper)
         {
             var genre = await repository.GetById(id);
 
@@ -37,39 +40,32 @@ namespace GrowthApi.Endpoints
                 return TypedResults.NotFound();
             }
 
-            var genreDto = new GenreDto
-            {
-                Id = id,
-                Name = genre.Name,
-            };
+            var genreDto = mapper.Map<GenreDto>(genre);
 
             return TypedResults.Ok(genreDto);
         }
 
         static async Task<Created<GenreDto>> CreateGenre(CreateGenreDto createGenreDto,
             IGenreRepository repository,
-            IOutputCacheStore outputCacheStore)
+            IOutputCacheStore outputCacheStore,
+            IMapper mapper)
         {
-            var genre = new Genre
-            {
-                Name = createGenreDto.Name,
-            };
+            var genre = mapper.Map<Genre>(createGenreDto);
             var id = await repository.Create(genre);
 
             // Refreshing the cache right after inserting a genre
             await outputCacheStore.EvictByTagAsync("genres-get", default);
 
-            var genreDto = new GenreDto
-            {
-                Id = id,
-                Name = genre.Name,
-            };
+            var genreDto = mapper.Map<GenreDto>(genre);
 
             return TypedResults.Created($"/genres/{id}", genreDto);
         }
 
-        static async Task<Results<NoContent, NotFound>> UpdateGenre(int id, Genre genre, IGenreRepository genreRepository,
-            IOutputCacheStore outputCacheStore)
+        static async Task<Results<NoContent, NotFound>> UpdateGenre(int id,
+            CreateGenreDto createGenreDto,
+            IGenreRepository genreRepository,
+            IOutputCacheStore outputCacheStore,
+            IMapper mapper)
         {
             var exists = await genreRepository.Exists(id);
 
@@ -77,6 +73,9 @@ namespace GrowthApi.Endpoints
             {
                 TypedResults.NotFound();
             }
+
+            var genre = mapper.Map<Genre>(createGenreDto);
+            genre.Id = id;
 
             await genreRepository.Update(genre);
 

@@ -33,6 +33,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 
+builder.Services.AddAutoMapper(typeof(Program));
+
 #endregion
 var app = builder.Build();
 
