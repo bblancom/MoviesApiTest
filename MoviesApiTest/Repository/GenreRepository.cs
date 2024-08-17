@@ -1,8 +1,7 @@
-﻿using GrowthApi.Entities;
-using GrowthApi.Migrations;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using MoviesApiTest.Entities;
 
-namespace GrowthApi.Repository
+namespace MoviesApiTest.Repository
 {
     public class GenreRepository : IGenreRepository
     {

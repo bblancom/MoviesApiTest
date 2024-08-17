@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using GrowthApi.Dtos;
-using GrowthApi.Entities;
+using MoviesApiTest.Dtos;
+using MoviesApiTest.Entities;
 
 namespace MoviesApiTest.Utilities
 {
@@ -10,6 +10,10 @@ namespace MoviesApiTest.Utilities
         {
             CreateMap<CreateGenreDto, Genre>();
             CreateMap<Genre, GenreDto>();
-        }
+
+			CreateMap<CreateActorDto, Actor>()
+                .ForMember(x => x.Picture, options => options.Ignore());
+			CreateMap<Actor, ActorDto>();
+		}
     }
 }

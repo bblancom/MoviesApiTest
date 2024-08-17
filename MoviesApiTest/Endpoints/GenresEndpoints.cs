@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using GrowthApi.Dtos;
-using GrowthApi.Entities;
-using GrowthApi.Repository;
+using MoviesApiTest.Dtos;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OutputCaching;
+using MoviesApiTest.Entities;
+using MoviesApiTest.Repository;
 
 namespace GrowthApi.Endpoints
 {
-    public static class GenresEndpoints
+	public static class GenresEndpoints
     {
         public static RouteGroupBuilder MapGenres(this RouteGroupBuilder group)
         {

@@ -1,4 +1,4 @@
-﻿namespace GrowthApi.Dtos
+﻿namespace MoviesApiTest.Dtos
 {
     public class CreateGenreDto
     {

@@ -1,7 +1,7 @@
-﻿using GrowthApi.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using MoviesApiTest.Entities;
 
-namespace GrowthApi
+namespace MoviesApiTest
 {
     public class ApplicationDbContext : DbContext
     {
@@ -14,8 +14,12 @@ namespace GrowthApi
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Genre>().Property(p => p.Name).HasMaxLength(50);
+
+            modelBuilder.Entity<Actor>().Property(p => p.Name).HasMaxLength(150);
+            modelBuilder.Entity<Actor>().Property(p => p.Picture).IsUnicode();
         }
 
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<Actor> Actors { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿using GrowthApi.Entities;
+﻿using MoviesApiTest.Entities;
 
-namespace GrowthApi.Repository
+namespace MoviesApiTest.Repository
 {
     public interface IGenreRepository
     {

@@ -1,12 +1,10 @@
-using GrowthApi;
 using GrowthApi.Endpoints;
-using GrowthApi.Entities;
-using GrowthApi.Migrations;
-using GrowthApi.Repository;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
+using MoviesApiTest;
+using MoviesApiTest.Endpoints;
+using MoviesApiTest.Repository;
+using MoviesApiTest.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var allowedOrigins = builder.Configuration.GetValue<string>("AllowedOrigins")!;
@@ -32,6 +30,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+builder.Services.AddScoped<IActorsRepository, ActorsRepository>();
+builder.Services.AddScoped<IFileStorage, LocalFileStorage>();
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -43,6 +45,8 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseStaticFiles();
+
 app.UseCors();
 
 app.UseOutputCache();
@@ -50,7 +54,7 @@ app.UseOutputCache();
 app.MapGet("/", [EnableCors("free")] () => "Hello World!");
 
 app.MapGroup("/genres").MapGenres();
-
+app.MapGroup("/actors").MapActors();
 
 #endregion
 app.Run();
